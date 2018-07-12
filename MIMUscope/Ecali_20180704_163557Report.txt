@@ -1,0 +1,7 @@
+<<<<<=======-------------------- REPORT --------------------=======>>> 
+  1. "g" values : default 
+  2. Acclerometer Range : default g 
+  3. Gyroscope Range : default degree/second 
+  4. Calibration File : -- 
+  5. Output Data Rate : 125.0 hz 
+  6. Run Time : 5.01826405525 seconds 
