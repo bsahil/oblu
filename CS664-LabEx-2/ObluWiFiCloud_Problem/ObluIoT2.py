@@ -44,7 +44,8 @@ import thread
 
 # device_ip = '172.31.5.214'
 # device_ip = '192.168.43.201'
-device_ip = '10.42.0.46'
+device_ip = '10.42.0.25'
+device_ip2 = '10.42.0.46'
 
 MAX_CMD_LENGTH = 6
 ACK_LEN = 4
@@ -410,5 +411,8 @@ except:
 
 port = 9876
 device_client = DeviceClient(device_ip, device_ip, port, queue)
+device_client2 = DeviceClient(device_ip2, device_ip2, port, queue)
 device_client.start()
+device_client2.start()
 device_client.join()
+device_client2.join()
