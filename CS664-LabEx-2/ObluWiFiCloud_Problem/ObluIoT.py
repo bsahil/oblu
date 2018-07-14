@@ -97,7 +97,7 @@ class DeviceConnectivityError(RuntimeError):
    def __init__(self, arg):
       self.args = arg
 
-class DeviceClient(threading.Thread):
+class DeviceClient2(threading.Thread):
     client_socket = ''
     outfile = ''
     def __init__(self, name, ip, port, queue):
@@ -409,6 +409,6 @@ except:
 
 
 port = 9876
-device_client = DeviceClient(device_ip, device_ip, port, queue)
+device_client = DeviceClient2(device_ip, device_ip, port, queue)
 device_client.start()
 device_client.join()
