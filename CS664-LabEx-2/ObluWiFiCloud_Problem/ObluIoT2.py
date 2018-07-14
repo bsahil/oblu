@@ -39,6 +39,7 @@ import datetime
 import threading
 import socket
 import sys
+import string
 import traceback
 import thread
 
@@ -270,8 +271,8 @@ class DeviceClient(threading.Thread):
         self.outfile = open(LOG_FILE,"ab+")
 
         if self.outfile :
-            str = "%10s\t%6s\t%6s\t%6s\t%6s\n" % ("PKT No.", "X", "Y", "Z", "Angle(Degree)")
-            self.outfile.write(str)
+            str1 = "%10s\t%6s\t%6s\t%6s\t%6s\n" % ("PKT No.", "X", "Y", "Z", "Angle(Degree)")
+            self.outfile.write(str1)
             self.outfile.flush()
 
     def write_file(self, x, y, z,phi):
@@ -286,12 +287,13 @@ class DeviceClient(threading.Thread):
                 except:
                     dict_log[self.pkt_counter]=[1,2]
                     dict_log[self.pkt_counter][0]=[-x, y, -z, phi]
-                str = "%d, %0.2f, %0.2f, %0.2f, %0.2f\n" % (self.pkt_counter, -x, y, -z, phi)
-                with open('dict.txt','w') as f:
-                    f.write(str(dict_log))
-                self.outfile.write(str)
+                str1 = "%d, %0.2f, %0.2f, %0.2f, %0.2f\n" % (self.pkt_counter, -x, y, -z, phi)
+                print(dict_log)
+                # with open('dict.txt','w') as f:
+                #     f.write(str(dict_log))
+                self.outfile.write(str1)
                 self.outfile.flush()
-                queue.put(str)
+                queue.put(str1)
                 self.prev_x = x
                 self.prev_y = y
                 self.pkt_counter += 1
