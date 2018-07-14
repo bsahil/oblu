@@ -28,7 +28,7 @@
 #   10-05-2018 |    0.0       |   Ajit Gupta                     | Intial Version
 #   06-06-2018 |    0.0       |   Ajit Gupta                     | TCP/IP communication with oblu
 
-
+import pyrebase
 import Queue
 import struct
 import math
@@ -86,10 +86,22 @@ def monitorUserCmd():
 def putDataToCloud(data_queue):
     global g_isRunning
     # Firebase Cloud Initilization
+    config = {
+    "apiKey": "AIzaSyCeA_KU96u9A7I6SFlO4XWpCRN64sAtPMU",
+    "authDomain": "oblu-iot-ed7bb.firebaseapp.com",
+    "databaseURL": "https://oblu-iot-ed7bb.firebaseio.com",
+    "projectId": "oblu-iot-ed7bb",
+    "storageBucket": "oblu-iot-ed7bb.appspot.com",
+    "messagingSenderId": "523845845146" }
+    app = pyrebase.initialize_app(config)
+    #db = app.database()
+   # firebase.initializeApp(config);
     while g_isRunning:
         while not data_queue.empty():
             data =  data_queue.get()
             # Put data to Firebase Database
+            db= app.database()
+            results = db.child("users").push(data)
             print data
             ##############################################
             data_queue.task_done()
