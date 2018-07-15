@@ -29,6 +29,7 @@
 #   06-06-2018 |    0.0       |   Ajit Gupta                     | TCP/IP communication with oblu
 
 import pyrebase
+# from pyrebase import pyrebase
 import Queue
 import struct
 import math
@@ -271,8 +272,8 @@ class DeviceClient(threading.Thread):
         self.outfile = open(LOG_FILE,"ab+")
 
         if self.outfile :
-            str1 = "%10s\t%6s\t%6s\t%6s\t%6s\n" % ("PKT No.", "X", "Y", "Z", "Angle(Degree)")
-            self.outfile.write(str1)
+            str = "%10s\t%6s\t%6s\t%6s\t%6s\n" % ("PKT No.", "X", "Y", "Z", "Angle(Degree)")
+            self.outfile.write(str)
             self.outfile.flush()
 
     def write_file(self, x, y, z,phi):
@@ -287,13 +288,13 @@ class DeviceClient(threading.Thread):
                 except:
                     dict_log[self.pkt_counter]=[1,2]
                     dict_log[self.pkt_counter][0]=[-x, y, -z, phi]
-                str1 = "%d, %0.2f, %0.2f, %0.2f, %0.2f\n" % (self.pkt_counter, -x, y, -z, phi)
+                str = "%d, %0.2f, %0.2f, %0.2f, %0.2f\n" % (self.pkt_counter, -x, y, -z, phi)
                 print(dict_log)
                 # with open('dict.txt','w') as f:
                 #     f.write(str(dict_log))
-                self.outfile.write(str1)
+                self.outfile.write(str)
                 self.outfile.flush()
-                queue.put(str1)
+                queue.put(str)
                 self.prev_x = x
                 self.prev_y = y
                 self.pkt_counter += 1
@@ -740,7 +741,7 @@ except:
 
 port = 9876
 device_client = DeviceClient(device_ip, device_ip, port, queue)
-device_client2 = DeviceClient(device_ip2, device_ip2, port, queue)
+device_client2 = DeviceClient2(device_ip2, device_ip2, port, queue)
 device_client.start()
 device_client2.start()
 device_client.join()
