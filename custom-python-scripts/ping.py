@@ -1,3 +1,5 @@
+#This script will ping all ip addresses which are possible to get ip of oblu.
+
 import os
 import re
 import time

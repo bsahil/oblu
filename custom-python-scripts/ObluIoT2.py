@@ -42,6 +42,7 @@ import sys
 import string
 import traceback
 import thread
+import plot_live
 
 # device_ip = '172.31.5.214'
 # device_ip = '192.168.43.201'
@@ -63,6 +64,22 @@ NUM_RETRY = -1
 g_isRunning = True
 queue = Queue.Queue()
 
+def total_theta(oblu, number):
+    theta = 0
+    for i in range (number+1):
+        theta += dict_log[i][oblu-1][3]
+    return theta
+
+def totalof(oblu, whose, number):
+    v = 0
+    if whose==0:
+        for i in range (number+1):
+            v += dict_log[i][oblu-1][4]*math.sin(total_theta(oblu, i))
+    else:
+        for i in range (number+1):
+            v += dict_log[i][oblu-1][4]*math.cos(total_theta(oblu, i))
+    return v
+
 def monitorUserCmd():
     global g_isRunning
     seq = 0
@@ -82,7 +99,6 @@ def monitorUserCmd():
             g_isRunning = False
             break
         time.sleep(5)
-
 
 def putDataToCloud(data_queue):
     global g_isRunning
@@ -286,10 +302,10 @@ class DeviceClient(threading.Thread):
                 if self.oblu==1:
                     try:
                         if dict_log[self.pkt_counter][0]==1:
-                            dict_log[self.pkt_counter][0]=[-x, y, -z, phi]
+                            dict_log[self.pkt_counter][0]=[-x, y, -z, phi, distance]
                     except:
                         dict_log[self.pkt_counter]=[1,2]
-                        dict_log[self.pkt_counter][0]=[-x, y, -z, phi]
+                        dict_log[self.pkt_counter][0]=[-x, y, -z, phi, distance]
                 
                 else:
                     try:
@@ -302,6 +318,13 @@ class DeviceClient(threading.Thread):
                 #print(dict_log)
                 with open('dict.txt','w') as f:
                     f.write(str(dict_log))
+                try:
+                    with open('gait.txt','a+') as j:
+                        a=(totalof(1, 0, self.pkt_counter) + totalof(2, 0, self.pkt_counter))/2
+                        b=(totalof(1, 1, self.pkt_counter) + totalof(2, 1, self.pkt_counter))/2
+                        j.write(str(a)+','+str(b)+'\n')
+                except:
+                    pass
                 self.outfile.write(str1)
                 self.outfile.flush()
                 queue.put(str1)
