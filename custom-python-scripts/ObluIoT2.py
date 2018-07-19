@@ -42,7 +42,7 @@ import sys
 import string
 import traceback
 import thread
-import plot_live
+#import plot_live
 
 # device_ip = '172.31.5.214'
 # device_ip = '192.168.43.201'
@@ -60,25 +60,12 @@ PROC_OFF_CMD = "320032"
 # LOG_FILE = "steps.txt" #check in powershell, > Get-Content -Path "C:/xampp/htdocs/iot_single/steps" -Wait
 # LOG_FILE2 = "steps1.txt"
 TIME_OUT = 10
+cnt = 0
 NUM_RETRY = -1
 g_isRunning = True
 queue = Queue.Queue()
 
-def total_theta(oblu, number):
-    theta = 0
-    for i in range (number+1):
-        theta += dict_log[i][oblu-1][3]
-    return theta
 
-def totalof(oblu, whose, number):
-    v = 0
-    if whose==0:
-        for i in range (number+1):
-            v += dict_log[i][oblu-1][4]*math.sin(total_theta(oblu, i))
-    else:
-        for i in range (number+1):
-            v += dict_log[i][oblu-1][4]*math.cos(total_theta(oblu, i))
-    return v
 
 def monitorUserCmd():
     global g_isRunning
@@ -310,26 +297,20 @@ class DeviceClient(threading.Thread):
                 else:
                     try:
                         if dict_log[self.pkt_counter][1]==2:
-                            dict_log[self.pkt_counter][1]=[-x, y, -z, phi]
+                            dict_log[self.pkt_counter][1]=[-x, y, -z, phi, distance]
                     except:
                         dict_log[self.pkt_counter]=[1,2]
-                        dict_log[self.pkt_counter][1]=[-x, y, -z, phi]
+                        dict_log[self.pkt_counter][1]=[-x, y, -z, phi, distance]
                 str1 = "%d, %0.2f, %0.2f, %0.2f, %0.2f\n" % (self.pkt_counter, -x, y, -z, phi)
                 #print(dict_log)
                 with open('dict.txt','w') as f:
                     f.write(str(dict_log))
-                try:
-                    with open('gait.txt','a+') as j:
-                        a=(totalof(1, 0, self.pkt_counter) + totalof(2, 0, self.pkt_counter))/2
-                        b=(totalof(1, 1, self.pkt_counter) + totalof(2, 1, self.pkt_counter))/2
-                        j.write(str(a)+','+str(b)+'\n')
-                except:
-                    pass
                 self.outfile.write(str1)
                 self.outfile.flush()
                 queue.put(str1)
                 self.prev_x = x
                 self.prev_y = y
+                cnt = self.pkt_counter
                 self.pkt_counter += 1
 
     def IsDeviceActive(self):
